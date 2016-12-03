@@ -2,6 +2,7 @@
 using ContosoSite.Properties;
 using System;
 using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -11,8 +12,8 @@ namespace ContosoSite.Controllers
 {
     public static class Generator
     {
-        private static string[] firstNames = Regex.Split(Resources.first_names, "\r\n");
-        private static string[] lastNames = Regex.Split(Resources.last_names, "\n");
+        private static string[] firstNames = Regex.Split(Resources.first_names, "\r\n|\r|\n");
+        private static string[] lastNames = Regex.Split(Resources.last_names, "\r\n|\r|\n");
         private static Random rand = new Random();
 
         public static int GenRandomInt(Random random, int max)
@@ -170,8 +171,12 @@ namespace ContosoSite.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            else
+            {
+                throw new ModelValidationException("error validatin' models");
+            }
 
-            return View(randStudent);
+           
         }
     }
 }
